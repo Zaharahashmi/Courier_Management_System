@@ -29,6 +29,7 @@ order by TotalPayments desc;
 
 -- 19. Calculate Total Payments per Location 
 select locationID, sum(amount) as TotalPayments from Payment group by LocationID;
+
 -- 20. Retrieve couriers who have received payments totaling more than $1000 in a specific location (LocationID = X): 
 select c.CourierID, c.TrackingNumber, sum(p.Amount) as TotalPayments
 from Courier c
@@ -46,14 +47,15 @@ where p.PaymentDate > '2025-03-23'
 group by c.CourierID, c.TrackingNumber
 having sum(p.Amount) > 150
 order by TotalPayments desc;
+
 -- 22. Retrieve locations where the total amount received is more than $5000 before a certain date (PaymentDate > 'YYYY-MM-DD')  
-SELECT l.LocationID, l.LocationName, SUM(p.Amount) AS TotalRevenue
-FROM Payment p
-JOIN LocationInfo l ON l.LocationID = p.LocationID
-WHERE p.PaymentDate < '2025-04-24'
-GROUP BY l.LocationID, l.LocationName
-HAVING SUM(p.Amount) > 100
-ORDER BY TotalRevenue DESC;
+select l.LocationID, l.LocationName, sum(p.Amount) as TotalRevenue
+from Payment p
+join LocationInfo l on l.LocationID = p.LocationID
+where p.PaymentDate < '2025-04-24'
+group by l.LocationID, l.LocationName
+having sum(p.Amount) > 100
+order by TotalRevenue DESC;
 
 select * from Payment;
 
@@ -72,8 +74,10 @@ select p.paymentid, p.amount, p.paymentdate, c.courierid, c.trackingnumber, c.co
 from payment p 
 join courier c on p.courierid = c.courierid
 join LocationInfo l on l.LocationID = p.LocationID;
+
 -- 26. List all payments with courier details  
 select p.*, c.* from Payment p join Courier c on p.CourierID=c.CourierID;
+
 -- 27. Total payments received for each courier  
 select c.CourierID,c.trackingnumber, sum(p.amount) as TotalPayments
 from Payment p join Courier c on p.CourierID=c.CourierID
@@ -90,7 +94,7 @@ left join courier c on p.courierid = c.courierid;
 -- 30. Get Payment Details with Location 
 select p.*,l.*
 from Payment p
-right join LocationInfo l on p.PaymentID=l.LocationID;
+right join LocationInfo l on p.LocationID=l.LocationID;
 
 -- 31. Calculating Total Payments for Each Courier  
 select c.CourierID,c.trackingnumber, sum(p.amount) as TotalPayments
@@ -101,19 +105,10 @@ select * from payment
 where paymentdate between '2025-03-29' and '2025-04-02';
 
 -- 33. Retrieve a list of all users and their corresponding courier records, including cases where there are no matches on either side  
-select u.*, c.*
-from users u
-full outer join courier c on u.userid = c.courierid;
 
 -- 34. Retrieve a list of all couriers and their corresponding services, including cases where there are no matches on either side  
-select c.*, cs.*
-from Courier c
-full outer join CourierServices cs on c.CourierID = cs.ServiceID;
 
 -- 35. Retrieve a list of all employees and their corresponding payments, including cases where there are no matches on either side  
-select e.*, p.*
-from employee e
-full outer join payment p on e.employeeid = p.paymentid;
 
 -- 36. List all users and all courier services, showing all possible combinations. 
 select u.*, s.*
@@ -133,14 +128,9 @@ select c.courierid, c.ReceiverName, c.ReceiverAddress
 from courier c;
 
 -- 40. Retrieve a list of couriers along with the courier service details (if available):  
-select c.courierid, c.TrackingNumber, cs.servicename from Courier c
-left join CourierServices cs on c.CourierID=cs.ServiceID;
 
 -- 41. Retrieve a list of employees and the number of couriers assigned to each employee:  
-select e.employeeid, e.employeename, count(c.courierid) as totalcouriersassigned
-from employee e
-left join courier c on e.employeeid = c.CourierID
-group by e.employeeid, e.employeename;
+
 
 -- 42. Retrieve a list of locations and the total payment amount received at each location: 
 select l.locationid, l.locationname, sum(p.amount) as totalrevenue
@@ -155,72 +145,50 @@ group by sendername
 having count(courierid) >= 1;
 
 -- 44. List all employees who share the same role. 
-select employeerole, count(employeeid) as totalemployees
+select employeeid,employeerole, count(employeeid) as totalemployees
 from employee
-group by employeerole
+group by EmployeeID,employeerole
 having count(employeeid) >= 1;
 
 -- 45. Retrieve all payments made for couriers sent from the same location.  
-select l.locationname, p.amount, c.senderaddress
-from payment p
-join courier c on c.courierid = p.courierid
-join locationinfo l on cast(c.senderaddress as varchar(500)) = cast(l.locationaddress as varchar(500))
-where p.amount > 0;
 
 -- 46. Retrieve all couriers sent from the same location (based on SenderAddress).  
 
-select cast(senderaddress as varchar(500)) as senderaddress, 
-       count(courierid) as totalcouriers
-from courier c 
-join locationinfo l 
-on cast(c.senderaddress as varchar(500)) = cast(l.locationaddress as varchar(500))
-group by cast(senderaddress as varchar(500))
-having count(courierid) > 1;
-
 -- 47. List employees and the number of couriers they have delivered: 
-select e.employeeid, e.employeename, count(c.courierid) as totaldelivered
-from employee e
-join courier c on e.employeeid = c.CourierID
-where c.courier_status = 'delivered'
-group by e.employeeid, e.employeename;
 
 -- 48. Find couriers that were paid an amount greater than the cost of their respective courier services 
-select c.courierid, c.trackingnumber, sum(p.amount) as totalpaid, s.cost
-from payment p
-join courier c on p.courierid = c.courierid
-join courierservices s on c.courierid = s.serviceid
-group by c.courierid, c.trackingnumber, s.cost
-having sum(p.amount) > s.cost;
 
 -- Scope: Inner Queries, Non Equi Joins, Equi joins,Exist,Any,All  
 -- 49. Find couriers that have a weight greater than the average weight of all couriers 
-SELECT courierid, sendername, receivername, courier_weight
-FROM courier
-WHERE courier_weight > (SELECT AVG(courier_weight) FROM courier);
+select courierid, sendername, receivername, courier_weight
+from courier
+where courier_weight > (select avg(courier_weight) from courier);
 
 -- 50. Find the names of all employees who have a salary greater than the average salary:  
-SELECT employeename, salary
-FROM employee
-WHERE salary > (SELECT AVG(salary) FROM employee);
+select employeename, salary
+from employee
+where salary > (select avg(salary) from employee);
 
 -- 51. Find the total cost of all courier services where the cost is less than the maximum cost
-SELECT SUM(cost) AS TotalCost
-FROM courierservices
-WHERE cost < (SELECT MAX(cost) FROM courierservices);
+select sum(cost) as TotalCost
+from courierservices
+where cost < (select max(cost) from courierservices);
 
 -- 52. Find all couriers that have been paid for  
-SELECT c.courierid, c.sendername, c.receivername, c.courier_weight, p.amount
-FROM courier c
-JOIN payment p ON c.courierid = p.courierid;
+select c.courierid, c.sendername, c.receivername, c.courier_weight, p.amount
+from courier c
+join payment p on c.courierid = p.courierid;
 
 -- 53. Find the locations where the maximum payment amount was made  
-SELECT l.locationid, l.locationname, p.amount
-FROM payment p
-JOIN locationinfo l ON p.locationid = l.locationid
-WHERE p.amount = (SELECT MAX(amount) FROM payment);
+select l.locationid, l.locationname, p.amount
+from payment p
+join locationinfo l on p.locationid = l.locationid
+where p.amount = (select max(amount) from payment);
 
 -- 54. Find all couriers whose weight is greater than the weight of all couriers sent by a
---specific sender (e.g., 'SenderName'): 
-SELECT courierid, sendername, receivername, courier_weight
-FROM courier
-WHERE courier_weight > ALL (SELECT courier_weight FROM courier WHERE sendername = 'Robert Brown');
+--specific sender (e.g., 'SenderName'):
+select courierid, sendername, receivername, courier_weight
+from courier
+where courier_weight > (select courier_weight from courier where sendername = 'Robert Brown');
+
+select * from Courier;
