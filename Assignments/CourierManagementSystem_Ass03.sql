@@ -15,6 +15,9 @@ join LocationInfo l on CAST(c.ReceiverAddress AS VARCHAR(500)) = CAST(l.Location
 where c.Courier_Status='Delivered'
 group by l.locationId, l.locationname;
 
+select * from LocationInfo;
+select * from Courier;
+
 -- 17. Find the courier with the highest average delivery time:  
 select top 1 c.courierID,c.TrackingNumber,avg(datediff(day, p.PaymentDate, c.Deliverdate)) as AveragedeliveryTime from Courier c
 join Payment p on c.CourierID=p.CourierID
@@ -151,8 +154,23 @@ group by EmployeeID,employeerole
 having count(employeeid) >= 1;
 
 -- 45. Retrieve all payments made for couriers sent from the same location.  
+select p.paymentID, c.courierID, c.SenderName,c.TrackingNumber,l.locationName from Courier c
+join Payment p on c.CourierID=p.CourierID
+join LocationInfo l on l.LocationID=p.LocationID
+where cast(c.SenderAddress as varchar(255)) in (
+    select cast(SenderAddress as varchar(255))
+    from Courier
+    group by cast(SenderAddress as varchar(255))
+    HAVING COUNT(*) > 1
+);
 
 -- 46. Retrieve all couriers sent from the same location (based on SenderAddress).  
+select c.courierID, c.SenderName,c.TrackingNumber,l.locationName from Courier c
+join Payment p on c.CourierID=p.CourierID
+join LocationInfo l on l.LocationID=p.LocationID
+where Cast(c.SenderAddress as varchar(255)) in (select cast(c.senderAddress as varchar(255)) from Courier c
+group by CAST(c.senderAddress as varchar(255))
+having count(*)>1);
 
 -- 47. List employees and the number of couriers they have delivered: 
 
