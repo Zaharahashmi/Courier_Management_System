@@ -41,7 +41,7 @@ namespace CourierManagement
             return courierObj.TrackingNumber;
         }
 
-        public List<Courier> GetAssignedOrder(long courierStaffId)
+        public List<Courier> GetAssignedOrder(int courierStaffId)
         {
             List<Courier> assignedOrders = new List<Courier>();
             foreach (Courier courier in courierList)
