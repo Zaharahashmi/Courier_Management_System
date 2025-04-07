@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +13,7 @@ namespace CourierManagement
             ICourierUserService userService = new CourierUserService();
             ICourierAdminService adminService = new CourierAdminService();
 
-            bool exit = false;
-
+            bool exit=false;
             while (!exit)
             {
                 Console.WriteLine("\n====== Courier Management System ======");
@@ -25,7 +24,7 @@ namespace CourierManagement
                 Console.WriteLine("5. Add Courier Staff");
                 Console.WriteLine("6. Get Courier Staff by ID");
                 Console.WriteLine("7. Exit");
-                Console.Write("Choose an option (1-7): ");
+                Console.Write("Enter the choice: ");
 
                 string choice = Console.ReadLine();
                 Console.WriteLine();
@@ -46,7 +45,7 @@ namespace CourierManagement
                         courier.Weight = double.Parse(Console.ReadLine());
                         courier.Status = "Placed";
                         courier.DeliveryDate = DateTime.Now.AddDays(3);
-                        Console.Write("Enter Courier Staff ID to assign: ");
+                        Console.Write("Enter Courier Staff ID: ");
                         courier.UserID = int.Parse(Console.ReadLine());
 
                         string trackingNum = userService.PlaceOrder(courier);
@@ -83,7 +82,7 @@ namespace CourierManagement
 
                     case "4":
                         Console.Write("Enter Courier Staff ID: ");
-                        long staffId = long.Parse(Console.ReadLine());
+                        int staffId = int.Parse(Console.ReadLine());
                         List<Courier> assignedOrders = userService.GetAssignedOrder(staffId);
                         if (assignedOrders.Count == 0)
                             Console.WriteLine("No orders assigned to this staff.");
@@ -114,7 +113,7 @@ namespace CourierManagement
 
                     case "6":
                         Console.Write("Enter Employee ID to fetch: ");
-                        long empId = long.Parse(Console.ReadLine());
+                        int empId = int.Parse(Console.ReadLine());
                         try
                         {
                             Employee found = ((CourierAdminService)adminService).GetEmployeeById(empId);
@@ -139,5 +138,3 @@ namespace CourierManagement
         }
     }
 }
-
-
