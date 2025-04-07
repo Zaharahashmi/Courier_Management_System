@@ -46,7 +46,7 @@ namespace CourierManagement
             List<Courier> assignedOrders = new List<Courier>();
             foreach (Courier courier in courierList)
             {
-                if (courier.UserID == courierStaffId)  // Assuming UserID maps to courierStaffId
+                if (courier.UserID == courierStaffId)
                 {
                     assignedOrders.Add(courier);
                 }
