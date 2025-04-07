@@ -11,6 +11,6 @@ namespace CourierManagement
         string PlaceOrder(Courier courierObj);
         string GetOrderStatus(string trackingNumber);
         bool CancelOrder(string trackingNumber);
-        List<Courier> GetAssignedOrder(long courierStaffId);
+        List<Courier> GetAssignedOrder(int courierStaffId);
     }
 }
