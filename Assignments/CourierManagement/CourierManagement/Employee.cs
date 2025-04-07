@@ -8,7 +8,7 @@ namespace CourierManagement
 {
     internal class Employee
     {
-        public long EmployeeID { get; set; }
+        public int EmployeeID { get; set; }
         public string EmployeeName { get; set; }
         public string Email { get; set; }
         public string ContactNumber { get; set; }
@@ -16,7 +16,7 @@ namespace CourierManagement
         public double Salary { get; set; }
 
         public Employee() { }
-        public Employee(long employeeID, string employeeName, string email, string contactNumber, string role, double salary)
+        public Employee(int employeeID, string employeeName, string email, string contactNumber, string role, double salary)
         {
             EmployeeID = employeeID;
             EmployeeName = employeeName;
