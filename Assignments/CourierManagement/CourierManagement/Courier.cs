@@ -8,7 +8,7 @@ namespace CourierManagement
 {
     internal class Courier
     {
-        private static int _trackingSeed = 1000;
+        private static int trackingSeed = 1000;
         public int CourierID { get; set; }
         public string SenderName { get; set; }
         public string SenderAddress { get; set; }
@@ -38,7 +38,7 @@ namespace CourierManagement
         }
         private string GenerateTrackingNumber()
         {
-            return $"TRK{_trackingSeed++}";
+            return $"TRK{trackingSeed++}";
         }
         public override string ToString() => $"CourierID: {CourierID}, Sender: {SenderName}, Receiver: {ReceiverName}, Status: {Status}, Tracking: {TrackingNumber}";
 
