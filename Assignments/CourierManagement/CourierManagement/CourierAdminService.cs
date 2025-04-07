@@ -9,7 +9,7 @@ namespace CourierManagement
     internal class CourierAdminService:ICourierAdminService
     {
         private static List<Employee> employeeList = new List<Employee>();
-        private static long employeeIdSeed = 1001;
+        private static int employeeIdSeed = 1001;
 
         public int AddCourierStaff(Employee obj)
         {
