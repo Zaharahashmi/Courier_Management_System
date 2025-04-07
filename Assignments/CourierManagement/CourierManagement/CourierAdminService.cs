@@ -17,7 +17,7 @@ namespace CourierManagement
             employeeList.Add(obj);
             return (int)obj.EmployeeID;
         }
-        public Employee GetEmployeeById(long id)
+        public Employee GetEmployeeById(int id)
         {
             foreach (Employee emp in employeeList)
             {
