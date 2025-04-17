@@ -4,7 +4,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        MainModule mainModule = new MainModule();
+        MainModule1 mainModule = new MainModule1();
         mainModule.Main();
     }
 }
