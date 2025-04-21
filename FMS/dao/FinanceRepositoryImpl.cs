@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -55,7 +55,7 @@ namespace FinanaceManagementSystem.dao
             catch (SqlException ex)
             {
                 if (ex.Message.Contains("FOREIGN KEY"))
-                    Console.WriteLine("Error: Invalid User ID or Category ID. Please check foreign key constraints.");
+                    Console.WriteLine("Error: Invalid User ID or Category ID.");
                 else if (ex.Message.Contains("PRIMARY KEY"))
                     Console.WriteLine("Error: Duplicate Expense ID. This expense already exists.");
                 else
@@ -81,7 +81,7 @@ namespace FinanaceManagementSystem.dao
             catch (SqlException ex)
             {
                 if (ex.Message.Contains("REFERENCE"))
-                    Console.WriteLine("Error: Cannot delete user. There are existing expenses linked.");
+                    Console.WriteLine("Error: Cannot delete user.");
                 else
                     Console.WriteLine("SQL Error while deleting user: " + ex.Message);
                 return false;
@@ -139,19 +139,19 @@ namespace FinanaceManagementSystem.dao
                 {
                     string message = $"No expenses found for user: {userId}";
                     Console.WriteLine(message);
-                    return new List<Expenses>();
+                    throw new ExpenseNotFoundException(message);
                 }
                 return expenses;
             }
             catch (SqlException ex)
             {
                 Console.WriteLine("SQL Error while fetching expenses: " + ex.Message);
-                return new List<Expenses>();
+                throw;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Unexpected error while fetching expenses: " + ex.Message);
-                return new List<Expenses>();
+                throw;
             }
         }
 
