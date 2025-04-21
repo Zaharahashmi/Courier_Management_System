@@ -148,11 +148,6 @@ namespace FinanaceManagementSystem.dao
                 Console.WriteLine("SQL Error while fetching expenses: " + ex.Message);
                 throw;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unexpected error while fetching expenses: " + ex.Message);
-                throw;
-            }
         }
 
         public bool UpdateExpense(int userId, Expenses updatedExpense)
